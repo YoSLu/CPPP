@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <time.h>
+
+using namespace std;
+
+class ABgame3{
+    public:
+    int cal = 0;
+    int a = 0;
+    int b = 0;
+    int maxtime = 7;
+    char menu = '1';
+    string result = "start";
+
+    string playgame (string guess, string ans){
+        if (guess.length() == 3){
+            int interger = stoi(guess);
+            string fine = to_string(interger);
+            if(fine[0] != fine[1] && fine[0] != fine[2] && fine[1] != fine[2]){
+                if(fine.compare(ans) == 0){
+                    return "3A, you win";
+                }
+                else{
+                    for(int i = 0; i < fine.length(); i++){
+                        if(fine[i] == ans[i]){
+                            a++;
+                        }
+                        if(fine[i] != ans[i] && ans.find(fine[i]) != string::npos){
+                            b++;
+                        }
+                    }
+                }
+            }
+            else{
+                return "repeat nums";
+            }
+        }
+        else{
+            return "null or not 3 digits!";
+        }
+        cout<<a<<"A"<<b<< "B, continue"<<endl;
+        return "try again";
+    }
+
+    int start(){
+        string ANS = get_answer();
+        string tryguess;
+
+        while(result != "3A, you win" && (maxtime - cal) > 0){
+            a = 0;
+            b = 0;
+            cout<<"3位數的AB game，剩"<<maxtime-cal<<"次機會"<<endl;
+            cout<<"請輸入猜數"<<endl;
+            cal++;
+            cin>>tryguess;
+            result = playgame(tryguess, ANS);
+            if(result == "3A, you win"){
+                cout<<result<<endl;
+                return 1;
+            }
+        }
+        cout<<"the ans is "<<ANS<<", you fail!"<<endl;
+        return 0;
+    }
+
+    int again(){
+        do{
+            cout<<"另起新局?"<<endl;
+            cout<<"1. 是 2. 否"<<endl;
+            cin >> menu;
+            if(menu == '1'){
+                result = "start";
+                cal = 0;
+                start();
+            }
+            else{
+                cout<<"bye"<<endl;
+                break;
+            }
+        }while(menu != 1);
+    }
+    ABgame3(){
+        int maxtime = 7;
+    }
+
+    private:
+    string get_answer(){
+        srand((unsigned)time(NULL));
+        int num[3];
+        string c = "";
+        string poker;
+        int i, j;
+
+        for (i=1; i<=3; i++){
+            do{
+                num[i-1] = rand()%10;
+                for(j=1; j<i; j++){
+                    if(num[i-1] == num[j-1]){
+                        break;
+                    }
+                }
+            }while(j!=i);
+            c+=to_string(num[i-1]);
+        }
+        cout<<"the ans is= "<<c<<endl;
+        return c;
+    }
+
+
+};
+
+int main()
+{
+    ABgame3 abgame3;
+    abgame3.start();
+    abgame3.again();
+    return 0;
+}
